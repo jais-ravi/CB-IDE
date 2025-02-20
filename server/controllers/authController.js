@@ -103,24 +103,61 @@ export const verifyOtp = async (req, res) => {
   }
 };
 
-export const signin = async (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err || !user) return res.status(400).json({ message: info.message });
+export const signin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-    // Generate JWT Token
+    // Check if user exists
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
+      expiresIn: "1d",
     });
 
-    // Set the JWT in a cookie (httpOnly for security)
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    // Send JWT in a cookie (optional)
+    res.cookie("token", token, {
+      httpOnly: true, // Prevents JavaScript access (better security)
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      sameSite: "strict", // Prevent CSRF
     });
 
-    res.json({ user });
-  })(req, res, next);
+    // Send response
+    res.json({
+      message: "Login successful",
+      user: { id: user._id, email: user.email },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
+export const logout = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  res.status(200).json({ message: "Logged out successfully" });
+};
+export const me = (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user) => {
+    if (err) return next(err);
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
+
+    // Return user data if authenticated
+    res.json({ user: { id: user._id, email: user.email } });
+  })(req, res, next);
+};

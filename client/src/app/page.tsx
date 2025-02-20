@@ -1,50 +1,17 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import React from "react";
 
-const Login = () => {
-  const { login, loading } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await login(email, password);
-      console.log("Login successful:", response);
-      // Redirect user or show success message here
-    } catch (error) {
-      console.error("Login failed:", error);
-      // Optionally show error message to the user
-    }
-  };
-
+const Page = () => {
+  const { user, logout } = useAuth();
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-      {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
-      <a href="http://localhost:5000/auth/google">Login with Google</a>
+      {user?.email}
+      <p>{user?.id}</p>
+
+      <button onClick={logout}>logout</button>
     </div>
   );
 };
 
-export default Login;
+export default Page;

@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import passport from "passport";
+import "./config/passport.js";
 
 dotenv.config();
 
@@ -25,8 +26,9 @@ app.use(passport.initialize());
 
 // Routes
 app.get("/", (req, res) => {
-    res.json({server:"run"});
+  res.json({ server: "running" });
 });
+
 app.use("/api/auth", authRoutes);
 
 app.listen(8000, () => {
