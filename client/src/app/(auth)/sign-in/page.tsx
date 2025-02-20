@@ -15,7 +15,7 @@ const authSchema = z.object({
     .min(8, { message: "Password must be at least 8 characters long" })
     .max(100, { message: "Password cannot exceed 100 characters" })
 
-    .regex(/^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]*$/, {
+    .regex(/^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]*$/,{
       message: "Password contains invalid characters",
     }),
 });
