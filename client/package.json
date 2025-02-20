@@ -9,7 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@auth/express": "^0.8.4",
+=======
+    "@hookform/resolvers": "^4.1.0",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-slot": "^1.1.2",
+>>>>>>> 18d4c0d38041ad934ad4927a9378381baebbd1a1
     "@xterm/xterm": "^5.5.0",
     "ace-builds": "^1.38.0",
     "axios": "^1.7.9",
@@ -22,11 +28,13 @@
     "react": "^19.0.0",
     "react-ace": "^14.0.1",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.2",
     "react-resizable-panels": "^2.1.7",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "xterm": "^5.3.0",
-    "xterm-addon-fit": "^0.8.0"
+    "xterm-addon-fit": "^0.8.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
