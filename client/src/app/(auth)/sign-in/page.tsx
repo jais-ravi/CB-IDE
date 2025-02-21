@@ -22,6 +22,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { FaGoogle } from "react-icons/fa";
+import { FaMeta } from "react-icons/fa6";
+import { FaApple } from "react-icons/fa";
 
 const Page = () => {
   const { login } = useAuth();
@@ -44,6 +47,12 @@ const Page = () => {
         console.error(err);
       }
     }
+  };
+  const handleGoogleLogin = () => {
+    window.open(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google`,
+      "_self"
+    );
   };
 
   return (
@@ -119,20 +128,20 @@ const Page = () => {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <Button variant="outline">
-                <span>Apple</span>
+              <Button variant="outline" disabled={true}>
+                <FaApple />
               </Button>
-              <Button variant="outline">
-                <span>Google</span>
+              <Button variant="outline" onClick={handleGoogleLogin}>
+                <FaGoogle />
               </Button>
-              <Button variant="outline">
-                <span>Meta</span>
+              <Button variant="outline" disabled={true}>
+                <FaMeta />
               </Button>
             </div>
 
             <div className="text-center text-sm ">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="underline">
+              <Link href="/sign-up" className="underline">
                 Sign up
               </Link>
             </div>
