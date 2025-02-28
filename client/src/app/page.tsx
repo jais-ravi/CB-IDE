@@ -1,11 +1,15 @@
 "use client";
 import { GlobeDemo } from "@/components/Globe";
+import NavBar from "@/components/Header/NavBar";
 import { SparklesCore } from "@/components/ui/sparkles";
 import React from "react";
+
 
 const Page = () => {
   return (
     <div className="w-full h-screen bg-black absolute">
+      {/* Navbar */}
+      <NavBar />
       {/* Sparkles in the background */}
       <div className="fixed top-0 left-0 w-full h-full z-0">
         <SparklesCore

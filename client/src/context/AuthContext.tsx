@@ -8,6 +8,7 @@ import {
   ReactNode,
 } from "react";
 import axios, { AxiosError } from "axios";
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -64,16 +65,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     fetchUser();
   }, []);
 
-  // Login function
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
       setError(null);
+  
       const res = await axiosInstance.post("/sign-in", { email, password });
+  
+      // If successful, set user and show success message
       setUser(res.data.user);
-    } catch (error) {
-      setError(handleApiError(error));
-      throw new Error(handleApiError(error));
+
+      if(!res.data.success){
+        toast.success(res.data.message);
+      }
+
+    } catch (error: any) {
+      // Extract error message from the server response
+      const errorMessage = error.response?.data?.error || "Something went wrong! Please try again.";
+  
+      // Show the error message dynamically
+      // toast.error(errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -424,7 +424,7 @@ export function GlobeDemo() {
           <div className="absolute w-full bottom-0 inset-x-0 h-40  bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40 " />
           <World data={sampleArcs} globeConfig={globeConfig} />
         </div>
-        <div className=" mb-14">
+        <div className=" mb-20">
           <Link href="/sign-in">
             <ShinyButton>Get Started!</ShinyButton>
           </Link>

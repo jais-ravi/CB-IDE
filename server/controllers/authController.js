@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { transporter } from "../config/nodmailer.js";
-import optModel from "../models/optModel.js";
+import otpModel from "../models/otpModel.js";
 import process from "node:process";
 import jwt from "jsonwebtoken";
 import passport from "passport";
@@ -27,7 +27,7 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Save OTP in database (temporary)
-    await optModel.create({
+    await otpModel.create({
       name,
       email,
       password: hashedPassword,
@@ -61,7 +61,7 @@ export const verifyOtp = async (req, res) => {
     }
 
     // Find OTP in database
-    const userOtp = await optModel.findOne({ email });
+    const userOtp = await otpModel.findOne({ email });
 
     if (!userOtp) {
       return res
@@ -71,7 +71,7 @@ export const verifyOtp = async (req, res) => {
 
     // Check if OTP is expired
     if (Date.now() > userOtp.expiresAt) {
-      await optModel.deleteOne({ email });
+      await otpModel.deleteOne({ email });
       return res
         .status(400)
         .json({ message: "OTP expired. Please sign up again." });
@@ -92,7 +92,7 @@ export const verifyOtp = async (req, res) => {
     });
 
     // Delete OTP entry after successful verification
-    await optModel.deleteOne({ email });
+    await otpModel.deleteOne({ email });
 
     res.status(201).json({
       message: "User verified and registered successfully!",
@@ -106,18 +106,23 @@ export const verifyOtp = async (req, res) => {
 export const signin = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+    
     // Check if user exists
     const user = await User.findOne({ email });
-
+    
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res
+      .status(404)
+      .json({ success: false, message: "Invalid credentials" });
     }
 
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     // Generate JWT token
@@ -127,15 +132,19 @@ export const signin = async (req, res) => {
 
     // Send JWT in a cookie (optional)
     res.cookie("token", token, {
-      httpOnly: true, // Prevents JavaScript access (better security)
-      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-      sameSite: "strict", // Prevent CSRF
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
     });
 
     // Send response
     res.json({
+      success: true,
       message: "Login successful",
-      user: { id: user._id, email: user.email },
+      user: {
+        id: user._id,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -156,8 +165,29 @@ export const me = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user) => {
     if (err) return next(err);
     if (!user) return res.status(401).json({ message: "Unauthorized" });
-
-    // Return user data if authenticated
     res.json({ user: { id: user._id, email: user.email } });
+  })(req, res, next);
+};
+
+export const google = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
+
+export const googleCallback = (req, res, next) => {
+  passport.authenticate("google", { failureRedirect: "/" }, (err, user) => {
+    if (err || !user) {
+      return res.redirect("/");
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.redirect(`${process.env.CLIENT_URL}/`);
   })(req, res, next);
 };
