@@ -63,10 +63,10 @@ const Page = () => {
           <div className="flex flex-col gap-5">
             <CardHeader className="pb-0 text-center">
               <CardTitle className=" text-lg font-bold">
-              Create a New Account
+                Create a New Account
               </CardTitle>
               <CardDescription>
-              Enter your email to get started with your new account
+                Enter your email to get started with your new account
               </CardDescription>
             </CardHeader>
 
@@ -160,13 +160,10 @@ const Page = () => {
             </div>
 
             <div className="text-center text-sm ">
-            Already have an account?{" "}
-              
+              Already have an account?{" "}
               <Link href="/sign-in" className="underline">
-                Sign in
+                login
               </Link>
-
-              
             </div>
           </div>
         </CardContent>
