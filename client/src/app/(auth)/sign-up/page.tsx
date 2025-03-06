@@ -64,10 +64,10 @@ const Page = () => {
           <div className="flex flex-col gap-5">
             <CardHeader className="pb-0 text-center">
               <CardTitle className=" text-lg font-bold">
-                Login to your account
+                Create Your Account
               </CardTitle>
               <CardDescription>
-                Enter your email below to login to your account
+                Enter your email below to sign up for a new account
               </CardDescription>
             </CardHeader>
 
@@ -86,8 +86,8 @@ const Page = () => {
                         <FormLabel>Username</FormLabel>
                         <FormControl>
                           <Input
-                            type="email"
-                            placeholder="Enter your email"
+                            type="Username"
+                            placeholder="Enter your Username"
                             {...field}
                           />
                         </FormControl>
@@ -135,7 +135,7 @@ const Page = () => {
 
                   {/* Submit Button */}
                   <Button type="submit" className="w-full ">
-                    Login
+                    Sign up
                   </Button>
                 </form>
               </Form>
@@ -160,9 +160,10 @@ const Page = () => {
             </div>
 
             <div className="text-center text-sm ">
-              Don&apos;t have an account?{" "}
-              <Link href="/sign-up" className="underline">
-                Sign up
+              Have an account?{" "}
+              <Link href="/sign-in" className="underline">
+                Sign in
+                
               </Link>
             </div>
           </div>
