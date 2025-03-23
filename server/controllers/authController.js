@@ -119,6 +119,7 @@ export const signin = async (req, res) => {
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
 
+
     if (!isMatch) {
       return res
         .status(401)
@@ -152,7 +153,7 @@ export const signin = async (req, res) => {
   }
 };
 
-export const logout = (req, res) => {
+export const signout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

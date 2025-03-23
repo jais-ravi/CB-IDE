@@ -4,7 +4,7 @@ import {
   signup,
   verifyOtp,
   signin,
-  logout,
+  signout,
   me,
   google,
   googleCallback,
@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/sign-up", signup);
 router.post("/verify-otp", verifyOtp);
 router.post("/sign-in", signin);
-router.post("/logout", logout);
+router.post("/logout", signout);
 router.get("/me", me);
 router.get("/google", google);
 router.get("/google/callback", googleCallback);

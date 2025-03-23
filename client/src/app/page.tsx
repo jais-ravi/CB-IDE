@@ -1,6 +1,6 @@
 "use client";
 import { GlobeDemo } from "@/components/Globe";
-import NavBar from "@/components/Header/NavBar";
+import NavBar from "@/components/Header/IDENavBar";
 import { SparklesCore } from "@/components/ui/sparkles";
 import React from "react";
 

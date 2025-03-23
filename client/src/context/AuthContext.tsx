@@ -27,14 +27,14 @@ interface AuthContextType {
 // Create Context with default value as null
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// ✅ Centralized Axios instance
+// Centralized Axios instance
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/auth",
   withCredentials: true,
   timeout: 10000, // 10 seconds timeout for better performance
 });
 
-// ✅ Centralized error handler
+// Centralized error handler
 const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError<{ message?: string }>;
@@ -51,9 +51,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
+      setLoading(true); 
       try {
-        const res = await axiosInstance.get("/me");
-        setUser(res.data.user);
+        const { data } = await axiosInstance.get("/me");
+        setUser(data.user);
       } catch (error) {
         setError(handleApiError(error));
         setUser(null);
@@ -66,41 +67,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+
     try {
-      setLoading(true);
-      setError(null);
-  
-      const res = await axiosInstance.post("/sign-in", { email, password });
-  
-      // If successful, set user and show success message
-      setUser(res.data.user);
-
-      if(!res.data.success){
-        toast.success(res.data.message);
-      }
-
-    } catch (error: any) {
-      // Extract error message from the server response
-      const errorMessage = error.response?.data?.error || "Something went wrong! Please try again.";
-  
-      // Show the error message dynamically
-      // toast.error(errorMessage);
+      const { data } = await axiosInstance.post("/sign-in", { email, password });
+      setUser(data.user);
+      toast.success(data.message);
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
       setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // Logout function
   const logout = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
       await axiosInstance.post("/logout");
       setUser(null);
     } catch (error) {
-      setError(handleApiError(error));
-      throw new Error(handleApiError(error));
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -113,7 +105,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Custom hook to use Auth Context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

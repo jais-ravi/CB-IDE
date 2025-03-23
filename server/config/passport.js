@@ -55,13 +55,17 @@ passport.use(
 
 // ✅ Add Serialization & Deserialization
 passport.serializeUser((user, done) => {
-  done(null, user.id); // Store only user ID in session
+  done(null, { id: user.id, email: user.email });
 });
 
-passport.deserializeUser(async (id, done) => {
+// ✅ Retrieve user from DB using stored ID
+passport.deserializeUser(async (data, done) => {
   try {
-    const user = await User.findById(id);
-    done(null, user); // Retrieve full user object from DB
+    const user = await User.findById(data.id);
+    if (user) {
+      user.email = data.email;
+    }
+    done(null, user);
   } catch (err) {
     done(err, null);
   }

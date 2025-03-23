@@ -25,9 +25,11 @@ import {
 import { FaGoogle } from "react-icons/fa";
 import { FaMeta } from "react-icons/fa6";
 import { FaApple } from "react-icons/fa";
+import { Loader2 } from "lucide-react";
+
 
 const Page = () => {
-  const { login } = useAuth();
+  const { login,loading } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(authSchema),
@@ -114,8 +116,19 @@ const Page = () => {
                   />
 
                   {/* Submit Button */}
-                  <Button type="submit" className="w-full ">
-                    Login
+                  <Button
+                    className="w-full"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait...
+                      </>
+                    ) : (
+                      "Sign In"
+                    )}
                   </Button>
                 </form>
               </Form>
