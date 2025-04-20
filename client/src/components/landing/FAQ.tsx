@@ -213,7 +213,7 @@ const faqItems: FAQItem[] = [
           <li>You can upgrade again at any time</li>
         </ul>
         <p className="text-neutral-400 mt-3">
-          We don't offer prorated refunds for unused portions of your subscription after cancellation.
+          We don't offer prorated refunds for unused portions of your subscription after cancellation
         </p>
       </>
     ),
