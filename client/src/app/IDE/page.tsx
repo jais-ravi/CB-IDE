@@ -7,7 +7,10 @@ import {
 } from "@/components/ui/resizable";
 import CodeEditor from "@/components/CodeEditor";
 import Terminal from "@/components/Terminal";
+<<<<<<< HEAD
 import IDENavBar from "@/components/Header/IDENavBar";
+=======
+>>>>>>> f7c3cf0 (landing page done)
 
 const page = () => {
   return (
