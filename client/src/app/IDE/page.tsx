@@ -7,6 +7,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import CodeEditor from "@/components/CodeEditor";
+<<<<<<< HEAD
 import Terminal from "@/components/IdeComponent/Terminal";
 import IDENavBar from "@/components/Header/IDENavBar";
 import FileTree from "@/components/IdeComponent/FileTree";
@@ -100,6 +101,13 @@ const Page = () => {
       debouncedSocketSave(selectedFile, code);
     }
   }, [code, selectedFile, debouncedSocketSave]);
+=======
+import Terminal from "@/components/Terminal";
+<<<<<<< HEAD
+import IDENavBar from "@/components/Header/IDENavBar";
+=======
+>>>>>>> f7c3cf0 (landing page done)
+>>>>>>> d44e586e8448ec2cad2c12544afe8615b0e3db89
 
   return (
     <div className="h-screen w-screen flex flex-col gap-1 p-2">
