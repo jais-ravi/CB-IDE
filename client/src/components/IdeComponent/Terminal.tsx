@@ -21,6 +21,11 @@ const Terminal = ({ containerName }: { containerName: string }) => {
       term = new XTerminal({
         scrollback: 1000,
         cursorBlink: true,
+        theme: {
+          background: "#1e2021",
+          foreground: "#d0d0d0",
+          cursor: "#ffffff",
+        },
       });
 
       fitAddon = new FitAddon();
@@ -71,7 +76,7 @@ const Terminal = ({ containerName }: { containerName: string }) => {
     <div
       ref={terminalRef}
       id="terminal"
-      className="w-full h-full overflow-y-auto bg-black"
+      className="w-full h-full overflow-y-auto"
     />
   );
 };

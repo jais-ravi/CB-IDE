@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import AceEditor from "react-ace";
 import ace from "ace-builds";
 
@@ -10,6 +10,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-github_dark";
 import "ace-builds/src-noconflict/theme-solarized_dark";
 import "ace-builds/src-noconflict/theme-xcode";
+import "ace-builds/src-noconflict/theme-gruvbox";
 
 // Languages
 import "ace-builds/src-noconflict/mode-javascript";
@@ -42,21 +43,41 @@ type Props = {
   mode?: string;
 };
 
-const CodeEditor: React.FC<Props> = ({ code, setCode }) => {
+const CodeEditor: React.FC<Props> = ({ code, setCode, mode = "javascript" }) => {
+  const editorRef = useRef<any>(null);     // AceEditor instance ref
+  const containerRef = useRef<HTMLDivElement>(null);   // Parent div ref
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver(() => {
+      if (editorRef.current) {
+        editorRef.current.editor.resize();
+      }
+    });
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <div>
+    <div ref={containerRef} className="w-full h-full">
       <AceEditor
-        mode="javascript"
-        theme="github_dark"
+        ref={editorRef}
+        mode={mode}
+        theme="gruvbox"
         name="code-editor"
         fontSize={14}
         value={code || ""}
         onChange={(e) => setCode(e)}
+        width="100%"
+        height="100%"
         showPrintMargin={false}
         showGutter={true}
         highlightActiveLine={true}
-        width="100%"
-        height="100vh"
         setOptions={{
           enableBasicAutocompletion: true,
           enableLiveAutocompletion: true,
@@ -64,9 +85,9 @@ const CodeEditor: React.FC<Props> = ({ code, setCode }) => {
           showLineNumbers: true,
           showFoldWidgets: true,
           tabSize: 2,
+          scrollPastEnd: true,
           hScrollBarAlwaysVisible: true,
           vScrollBarAlwaysVisible: true,
-          scrollPastEnd: true,
         }}
       />
     </div>

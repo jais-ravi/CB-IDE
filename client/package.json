@@ -29,12 +29,9 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.4.7",
-<<<<<<< HEAD
-    "lodash.debounce": "^4.0.8",
-=======
     "jsx": "^0.9.89",
     "JSX": "^1.1.0",
->>>>>>> d44e586e8448ec2cad2c12544afe8615b0e3db89
+    "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.475.0",
     "motion": "^12.4.7",
     "next": "^15.2.3",

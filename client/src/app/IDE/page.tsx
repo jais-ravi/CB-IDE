@@ -7,13 +7,14 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import CodeEditor from "@/components/CodeEditor";
-<<<<<<< HEAD
 import Terminal from "@/components/IdeComponent/Terminal";
 import IDENavBar from "@/components/Header/IDENavBar";
 import FileTree from "@/components/IdeComponent/FileTree";
 import axios from "axios";
 import socket from "@/socket";
 import debounce from "lodash.debounce";
+import { BACKEND_URL } from "@/lib/config";
+
 
 const getLanguageFromExtension = (filename: string | null): string => {
   if (!filename) return "text";
@@ -45,7 +46,7 @@ const Page = () => {
 
   const getFileTree = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:8000/files", {
+      const response = await axios.get(`${BACKEND_URL}/files`, {
         params: { userId, project, container },
       });
       setFileTree(response.data);
@@ -57,11 +58,9 @@ const Page = () => {
   const fetchFileContent = useCallback(
     async (path: string) => {
       try {
-        // Remove the project name part from the path
-        // const relativePath = path.replace(`${project}/`, "");  // Remove the project part
-  
-        console.log("Fetching file with path:",path , project, container, userId);  // Debug log
-        const res = await axios.get("http://localhost:8000/files/content", {
+
+        console.log("Fetching file with path:",path , project, container, userId);
+        const res = await axios.get(`${BACKEND_URL}/files/content`, {
           params: { path, project, container, userId },
         });
         setCode(res.data.content);
@@ -101,31 +100,26 @@ const Page = () => {
       debouncedSocketSave(selectedFile, code);
     }
   }, [code, selectedFile, debouncedSocketSave]);
-=======
-import Terminal from "@/components/Terminal";
-<<<<<<< HEAD
-import IDENavBar from "@/components/Header/IDENavBar";
-=======
->>>>>>> f7c3cf0 (landing page done)
->>>>>>> d44e586e8448ec2cad2c12544afe8615b0e3db89
+
+
 
   return (
-    <div className="h-screen w-screen flex flex-col gap-1 p-2">
+    <div className="h-screen w-screen flex flex-col gap-1 p-2 ">
       <IDENavBar />
-      <div className="w-full h-full border text-card-foreground rounded-md overflow-hidden">
+      <div className="w-full h-full border text-card-foreground rounded-xl bg-[#1e2021] overflow-hidden">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel defaultSize={15} minSize={5}>
-            <div className="h-full w-full overflow-y-auto p-2 bg-muted">
+            <div className="h-full w-full overflow-y-auto p-2  ">
               <FileTree tree={fileTree} onSelect={setSelectedFile} />
             </div>
           </ResizablePanel>
-          <ResizableHandle withHandle />
+          <ResizableHandle  />
           <ResizablePanel defaultSize={85}>
             <ResizablePanelGroup direction="vertical">
               <ResizablePanel defaultSize={75}>
                 <div className="h-full w-full">
                   {selectedFile && (
-                    <p className="text-sm text-muted-foreground mb-1">
+                    <p className="text-sm text-muted-foreground mb-1 pl-2">
                       {selectedFile.replaceAll("/", " > ")}
                     </p>
                   )}
@@ -136,7 +130,7 @@ import IDENavBar from "@/components/Header/IDENavBar";
                   />
                 </div>
               </ResizablePanel>
-              <ResizableHandle withHandle />
+              <ResizableHandle  />
               <ResizablePanel defaultSize={25} minSize={10}>
                 <div className="h-full w-full">
                   <Terminal containerName={container} />

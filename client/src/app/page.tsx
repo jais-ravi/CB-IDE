@@ -1,33 +1,31 @@
-"use client";
-import { GlobeDemo } from "@/components/Globe";
-import NavBar from "@/components/Header/IDENavBar";
-import { SparklesCore } from "@/components/ui/sparkles";
-import React from "react";
+import React from 'react'
+import Footer from '@/components/landing/ Footer'
+import FAQ from '@/components/landing/FAQ'
+import Features from '@/components/landing/Features'
+import Header from '@/components/landing/Header'
+import Hero from '@/components/landing/Hero'
+import HeroSection from '@/components/landing/HeroSection'
+import HowItWorks from '@/components/landing/HowItWorks'
+import LiveDemo from '@/components/landing/LiveDemo'
+import Pricing from '@/components/landing/Pricing'
+import TargetAudiences from '@/components/landing/TargetAudiences'
 
 
-const Page = () => {
+const page = () => {
   return (
-    <div className="w-full h-screen bg-black absolute">
-      {/* Navbar */}
-      <NavBar />
-      {/* Sparkles in the background */}
-      <div className="fixed top-0 left-0 w-full h-full z-0">
-        <SparklesCore
-          background="transparent"
-          minSize={0.4}
-          maxSize={1}
-          particleDensity={80}
-          className="w-full h-full"
-          particleColor="#FFFFFF"
-        />
-      </div>
-
-      {/* Globe in the foreground */}
-      <div className="relative w-full h-full flex items-center justify-center z-10">
-        <GlobeDemo />
-      </div>
+    <div>
+        <Header/>
+        <Hero/>
+        <Features/>
+        <HowItWorks/>
+        <TargetAudiences/>
+        <LiveDemo/>
+        <Pricing/>
+        <FAQ/>
+        <HeroSection/>
+        <Footer/>
     </div>
-  );
-};
+  )
+}
 
-export default Page;
+export default page
