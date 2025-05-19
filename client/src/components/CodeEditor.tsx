@@ -43,7 +43,7 @@ type Props = {
   mode?: string;
 };
 
-const CodeEditor: React.FC<Props> = ({ code, setCode, mode = "javascript" }) => {
+const CodeEditor: React.FC<Props> = ({ code, setCode, mode  }) => {
   const editorRef = useRef<any>(null);     // AceEditor instance ref
   const containerRef = useRef<HTMLDivElement>(null);   // Parent div ref
 

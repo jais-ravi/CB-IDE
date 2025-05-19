@@ -29,8 +29,8 @@ import { Loader2 } from "lucide-react";
 
 
 const Page = () => {
-  const { login,loading } = useAuth();
-
+  const { user,login,loading } = useAuth();
+  
   const form = useForm({
     resolver: zodResolver(authSchema),
     defaultValues: {
@@ -42,6 +42,7 @@ const Page = () => {
   const handleLogin = async (data: { email: string; password: string }) => {
     try {
       await login(data.email, data.password);
+      console.log(user)
     } catch (err) {
       if (err instanceof Error) {
         console.error(err.message);
