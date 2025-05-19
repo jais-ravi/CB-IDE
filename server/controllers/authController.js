@@ -106,7 +106,7 @@ export const verifyOtp = async (req, res) => {
 export const signin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     // Check if user exists
     const user = await User.findOne({ email });
     
@@ -115,7 +115,6 @@ export const signin = async (req, res) => {
       .status(404)
       .json({ success: false, message: "Invalid credentials" });
     }
-
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
 
@@ -166,7 +165,7 @@ export const me = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user) => {
     if (err) return next(err);
     if (!user) return res.status(401).json({ message: "Unauthorized" });
-    res.json({ user: { id: user._id, email: user.email } });
+    res.json({ user: { id: user._id, email: user.email , name :user.name } });
   })(req, res, next);
 };
 

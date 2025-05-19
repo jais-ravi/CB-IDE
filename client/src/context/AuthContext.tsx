@@ -7,8 +7,10 @@ import {
   useState,
   ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
+import { BACKEND_URL } from "@/lib/config";
 
 interface User {
   id: string;
@@ -19,22 +21,23 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
   loading: boolean;
   error: string | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-// Create Context with default value as null
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Centralized Axios instance
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/auth",
+  baseURL: BACKEND_URL
+    ? `${BACKEND_URL}/api/auth`
+    : "http://localhost:8000/api/auth",
   withCredentials: true,
-  timeout: 10000, // 10 seconds timeout for better performance
+  timeout: 10000,
 });
 
-// Centralized error handler
 const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     const axiosError = error as AxiosError<{ message?: string }>;
@@ -47,16 +50,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  // Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
-      setLoading(true); 
+      setLoading(true);
       try {
         const { data } = await axiosInstance.get("/me");
         setUser(data.user);
       } catch (error) {
-        setError(handleApiError(error));
+        const message = handleApiError(error);
+        if (message !== "Unauthorized") {
+          setError(message);
+        }
         setUser(null);
       } finally {
         setLoading(false);
@@ -69,11 +75,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
-
     try {
       const { data } = await axiosInstance.post("/sign-in", { email, password });
       setUser(data.user);
       toast.success(data.message);
+      router.push("/overview");
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signup = async (email: string, password: string, name?: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await axiosInstance.post("/sign-up", {
+        email,
+        password,
+        name,
+      });
+      setUser(data.user);
+      toast.success(data.message);
+      router.push("/overview");
     } catch (error) {
       const errorMessage = handleApiError(error);
       toast.error(errorMessage);
@@ -89,6 +116,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await axiosInstance.post("/logout");
       setUser(null);
+      toast.success("Logged out successfully");
+      router.push("/");
     } catch (error) {
       const errorMessage = handleApiError(error);
       toast.error(errorMessage);
@@ -99,7 +128,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, error }}>
+    <AuthContext.Provider
+      value={{ user, login, signup, logout, loading, error, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
