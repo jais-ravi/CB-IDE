@@ -74,3 +74,13 @@
   }
 }
 
+
+
+body {
+  @apply bg-black text-black;
+}
+
+.dark {
+  @apply bg-gray-900 text-white;
+}
+
